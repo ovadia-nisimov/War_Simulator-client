@@ -5,4 +5,5 @@ export interface IAttack {
   intercepts: string[];
   id_attacker: string; 
   id_intercepted?: string; 
+  AttackArea: string;
 }
