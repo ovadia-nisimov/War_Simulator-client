@@ -6,4 +6,5 @@ export interface IAttack {
   id_attacker: string; 
   id_intercepted?: string; 
   AttackArea: string;
+  status: string
 }

@@ -12,7 +12,7 @@ export default function Login() {
 
   useEffect(() => {
     if (!user?._id) return;
-    navigate("/register");
+    navigate("/attack");
   }, [user]);
 
   return (

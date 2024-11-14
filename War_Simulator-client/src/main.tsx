@@ -5,9 +5,12 @@ import App from "./App.tsx";
 import { Provider } from "react-redux";
 import store from "./store/store.ts";
 import { BrowserRouter } from "react-router-dom";
+
+
 import { io } from "socket.io-client";
 
-// export const socket = io("http://localhost:9000");
+export const socket = io("http://localhost:3500");
+
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
