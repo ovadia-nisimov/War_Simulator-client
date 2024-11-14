@@ -1,12 +1,13 @@
 export interface IUser {
   _id: string; 
   username: string; 
+  password: string; 
   organization: string; 
-  area?: string; 
-  missiles: {
-    type: string;
-    quantity: number; 
+  region?: string; 
+  userMissiles: {
+    name: string;
+    amount: number; 
   }[];
-  userBudget: number;
-  isAttacker: boolean;
+  userBudget: number; 
+  isAttacker: boolean; 
 }

@@ -1,6 +1,6 @@
 export interface IMissile {
   _id: string; 
-  name: string;
+  name: string; 
   description: string; 
   speed: number; 
   intercepts: string[]; 

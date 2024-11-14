@@ -1,15 +1,8 @@
-import { ActionReducerMapBuilder, createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DataStatus }  from "../types/redux";
-import { IUser } from "../types/user";
+// src/store/slices/userSlice.ts
 
-
-
-
-interface userState {
-  error: string | null;
-  status: DataStatus;
-  user: null | IUser;
-}
+import {ActionReducerMapBuilder,createAsyncThunk,createSlice,} from "@reduxjs/toolkit";
+import { DataStatus, userState } from "../../types/redux";
+import { IUser } from "../../types/user";
 
 const initialState: userState = {
   error: null,
@@ -19,47 +12,47 @@ const initialState: userState = {
 
 export const fetchLogin = createAsyncThunk(
   "user/login",
-  async (user: { username: string; password: string }, thunkApi) => {
+  async (userData: { username: string; password: string }, thunkApi) => {
     try {
       const res = await fetch("http://localhost:3500/api/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify(userData),
       });
-      
+
       if (!res.ok) {
-        return thunkApi.rejectWithValue("Can't login, please try again");
+        return thunkApi.rejectWithValue("Unable to login, please try again");
       }
 
-      // שליפת הטוקן מההדר
-      const token = res.headers.get("Authorization");
+      const token = res.headers.get("Authorization")?.replace("Bearer ", "");
       if (token) {
         localStorage.setItem("token", token);
+      } else {
+        return thunkApi.rejectWithValue("Token not found in response headers");
       }
 
       const data = await res.json();
-      return thunkApi.fulfillWithValue(data);
-    } catch (err) {
-      return thunkApi.rejectWithValue("Can't login, please try again");
+      data.user.isAttacker = data.user.organization !== "IDF";
+      return thunkApi.fulfillWithValue(data.user);
+    } catch (error) {
+      return thunkApi.rejectWithValue(
+        error instanceof Error ? error.message : "Unknown error occurred"
+      );
     }
   }
 );
-
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    initUser:(state) => {
-      state.user = null
-  },
     logout: (state) => {
       state.user = null;
       state.status = DataStatus.IDLE;
       state.error = null;
-      localStorage.removeItem("Authorization");
+      localStorage.removeItem("token");
     },
   },
   extraReducers: (builder: ActionReducerMapBuilder<userState>) => {
@@ -78,9 +71,9 @@ const userSlice = createSlice({
         state.status = DataStatus.FAILED;
         state.error = action.payload as string;
         state.user = null;
-      })
+      });
   },
 });
 
-export const { logout, initUser } = userSlice.actions;
-export default userSlice.reducer;
+export const { logout } = userSlice.actions;
+export default userSlice;
