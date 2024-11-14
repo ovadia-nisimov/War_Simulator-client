@@ -28,7 +28,7 @@ export default function Attack() {
     socket.emit("attackLaunch", { name: missileName, regionAttacked, attackerId: user._id });
 
     socket.on("attackLaunched", (newAttack: IAttack) => {
-      dispatch(addAttack(newAttack)); // הוספת התקיפה החדשה לרשימה בסטייט
+      dispatch(addAttack(newAttack));
       setActiveMissiles((prevMissiles) =>
         prevMissiles.map((missile) =>
           missile.name === missileName && missile.amount > 0

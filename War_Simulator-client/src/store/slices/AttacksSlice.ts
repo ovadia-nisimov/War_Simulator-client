@@ -27,20 +27,22 @@ export const fetchAttacks = createAsyncThunk("attacks/user-attacks", async () =>
   return data;
 });
 
-// export const createAttack = createAsyncThunk(
-//   "attacks/createAttack",
-//   async (attackData: { missileName: string; regionAttacked: string; attackerId: string }) => {
-//     return new Promise<IAttack>((resolve, reject) => {
-//       socket.emit("attackLaunch", attackData, (response: IAttack | string) => {
-//         if (typeof response === "string") {
-//           reject(response);
-//         } else {
-//           resolve(response);
-//         }
-//       });
-//     });
-//   }
-// );
+export const fetchAttacksByRegion = createAsyncThunk("attacks/region-attacks", async () => {
+  const response = await fetch("http://localhost:3500/api/attacks/region-attacks", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch attacks");
+  }
+
+  const data: IAttack[] = await response.json();
+  return data;
+})
 
 const attacksSlice = createSlice({
   name: "attacks",
@@ -69,19 +71,19 @@ const attacksSlice = createSlice({
         state.status = DataStatus.FAILED;
         state.error = action.error.message || "Failed to fetch attacks";
       })
-      // .addCase(createAttack.pending, (state) => {
-      //   state.status = DataStatus.LOADING;
-      // })
-      // .addCase(createAttack.fulfilled, (state, action: PayloadAction<IAttack>) => {
-      //   state.attacks.push(action.payload);
-      //   state.status = DataStatus.SUCCESS;
-      // })
-      // .addCase(createAttack.rejected, (state, action) => {
-      //   state.status = DataStatus.FAILED;
-      //   state.error = action.error.message || "Failed to create attack";
-      // });
+      .addCase(fetchAttacksByRegion.pending, (state) => {
+        state.status = DataStatus.LOADING;
+      })
+      .addCase(fetchAttacksByRegion.fulfilled, (state, action: PayloadAction<IAttack[]>) => {
+        state.attacks = action.payload;
+        state.status = DataStatus.SUCCESS;
+      })
+      .addCase(fetchAttacksByRegion.rejected, (state, action) => {
+        state.status = DataStatus.FAILED;
+        state.error = action.error.message || "Failed to fetch attacks";
+      });
   },
 });
 
 export const { addAttack, resetAttacks } = attacksSlice.actions;
-export default attacksSlice;
+export default attacksSlice;

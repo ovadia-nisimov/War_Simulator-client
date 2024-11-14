@@ -1,11 +1,12 @@
 // src/types/attack.ts
 
 export interface IAttack {
-  _id: string; 
+  _id: string;
   name: string; 
   timeToHit: number; 
-  regionAttacked: string;
+  regionAttacked: string; 
   attackerId: string; 
   interceptedId?: string; 
   intercepted: boolean;
+  status: "Launched" | "Hit" | "Intercepted";
 }
