@@ -2,9 +2,8 @@
 
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { fetchAttacks, addAttack } from "../../store/slices/AttacksSlice";
+import { fetchAttacks } from "../../store/slices/AttacksSlice";
 import { IAttack } from "../../types/attack";
-import { socket } from "../../main";
 import "../../index.css";
 
 export default function AttackLaunchs() {
@@ -13,15 +12,8 @@ export default function AttackLaunchs() {
 
   useEffect(() => {
     dispatch(fetchAttacks());
-
-    socket.on("attackLaunched", (newAttack: IAttack) => {
-      dispatch(addAttack(newAttack));
-    });
-
-    return () => {
-      socket.off("attackLaunched");
-    };
-  }, [dispatch]);
+  }, []);
+  
 
   return (
     <div className="attack-launchs">
