@@ -1,5 +1,3 @@
-// src/types/attack.ts
-
 export interface IAttack {
   _id: string;
   name: string; 

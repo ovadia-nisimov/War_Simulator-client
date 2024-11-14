@@ -1,5 +1,3 @@
-// src/pages/AttackDashboard.tsx
-
 import Logout from "../../components/Logout";
 import Attack from "./Attack";
 import AttackLaunchs from "./AttackLaunchs";

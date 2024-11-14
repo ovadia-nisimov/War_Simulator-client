@@ -1,5 +1,3 @@
-// src/store/slices/AttacksSlice.ts
-
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { attacksState, DataStatus } from "../../types/redux";
 import { IAttack } from "../../types/attack";

@@ -1,5 +1,3 @@
-// src/store/slices/userSlice.ts
-
 import {ActionReducerMapBuilder,createAsyncThunk,createSlice,} from "@reduxjs/toolkit";
 import { DataStatus, userState } from "../../types/redux";
 import { IUser } from "../../types/user";

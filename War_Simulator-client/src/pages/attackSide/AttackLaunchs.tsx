@@ -1,5 +1,3 @@
-// src/pages/AttackLaunchs.tsx
-
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { fetchAttacks, addAttack } from "../../store/slices/AttacksSlice";
@@ -21,11 +19,10 @@ export default function AttackLaunchs() {
     setUpdatedAttacks(attacks);
   }, [attacks]);
 
-  // Listen for a new attack launch and update active attack
   useEffect(() => {
     socket.on("attackLaunched", (newAttack: IAttack) => {
       dispatch(addAttack(newAttack));
-      setActiveAttackId(newAttack._id); // Set the active attack ID for the launched attack
+      setActiveAttackId(newAttack._id);
       setUpdatedAttacks((prevAttacks) => [...prevAttacks, newAttack]);
     });
 
@@ -34,7 +31,6 @@ export default function AttackLaunchs() {
     };
   }, [dispatch]);
 
-  // Function to update attack status on the server
   const updateAttackStatus = async (attackId: string, status: string) => {
     try {
       const response = await fetch("http://localhost:3500/api/attacks/update-status", {
@@ -56,7 +52,6 @@ export default function AttackLaunchs() {
     }
   };
 
-  // Timer for the active attack
   useEffect(() => {
     if (!activeAttackId) return;
 
@@ -69,8 +64,8 @@ export default function AttackLaunchs() {
 
           const updatedTime = attack.timeToHit - 1;
           if (updatedTime === 0) {
-            updateAttackStatus(attack._id, "Hit"); // Call the update status function when time reaches 0
-            setActiveAttackId(null); // Reset activeAttackId so the timer stops running
+            updateAttackStatus(attack._id, "Hit");
+            setActiveAttackId(null); 
           }
           return {
             ...attack,

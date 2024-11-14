@@ -1,5 +1,3 @@
-// src/store/store.ts
-
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import userSlice from "./slices/userSlice";

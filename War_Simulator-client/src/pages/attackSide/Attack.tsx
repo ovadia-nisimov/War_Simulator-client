@@ -1,5 +1,3 @@
-// src/pages/Attack.tsx
-
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { addAttack, fetchAttacks } from "../../store/slices/AttacksSlice";
@@ -17,6 +15,14 @@ export default function Attack() {
   useEffect(() => {
     dispatch(fetchAttacks());
     setActiveMissiles(() => user?.userMissiles.filter((missile) => missile.amount > 0) || []);
+
+    socket.on("attackLaunched", (newAttack: IAttack) => {
+      dispatch(addAttack(newAttack));
+    });
+
+    return () => {
+      socket.off("attackLaunched");
+    };
   }, [dispatch, user?.userMissiles]);
 
   const handleLaunch = (missileName: string) => {
@@ -26,17 +32,13 @@ export default function Attack() {
     }
 
     socket.emit("attackLaunch", { name: missileName, regionAttacked, attackerId: user._id });
-
-    socket.on("attackLaunched", (newAttack: IAttack) => {
-      dispatch(addAttack(newAttack));
-      setActiveMissiles((prevMissiles) =>
-        prevMissiles.map((missile) =>
-          missile.name === missileName && missile.amount > 0
-            ? { ...missile, amount: missile.amount - 1 }
-            : missile
-        )
-      );
-    });
+    setActiveMissiles((prevMissiles) =>
+      prevMissiles.map((missile) =>
+        missile.name === missileName && missile.amount > 0
+          ? { ...missile, amount: missile.amount - 1 }
+          : missile
+      )
+    );
   };
 
   return (
